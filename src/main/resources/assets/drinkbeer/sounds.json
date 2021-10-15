@@ -1,0 +1,12 @@
+{
+  "drinking_beer": {
+    "sounds": [
+      "drinkbeer:drinking_beer"
+    ]
+  },
+  "pouring": {
+    "sounds": [
+	  "drinkbeer:pouring"
+    ]
+  }
+}
