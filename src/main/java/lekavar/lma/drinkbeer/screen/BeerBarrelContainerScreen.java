@@ -67,7 +67,7 @@ public class BeerBarrelContainerScreen extends AbstractContainerScreen<BeerBarre
             int m = (int) (time / 60);
             int s = (int) (time % 60);
             result = m + ":" + s;
-        } else result = "0:0";
+        } else result = "";
         return result;
     }
 }
