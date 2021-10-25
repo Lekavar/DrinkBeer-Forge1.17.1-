@@ -1,4 +1,4 @@
-package lekavar.lma.drinkbeer.tileentity;
+package lekavar.lma.drinkbeer.blockentities;
 
 import lekavar.lma.drinkbeer.gui.BeerBarrelContainer;
 import lekavar.lma.drinkbeer.recipes.BrewingRecipe;
@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BeerBarrelTileEntity extends BlockEntity implements MenuProvider, IBrewingInventory {
+public class BeerBarrelBlockEntity extends BlockEntity implements MenuProvider, IBrewingInventory {
     private NonNullList<ItemStack> items = NonNullList.withSize(6, ItemStack.EMPTY);
     // This int will not only indicate remainingBrewTime, but also represent Standard Brewing Time if valid in "waiting for ingredients" stage
     private int remainingBrewTime;
@@ -66,7 +66,7 @@ public class BeerBarrelTileEntity extends BlockEntity implements MenuProvider, I
         }
     };
 
-    public BeerBarrelTileEntity(BlockPos pos, BlockState state) {
+    public BeerBarrelBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntityRegistry.BEER_BARREL_TILEENTITY.get(), pos, state);
     }
 

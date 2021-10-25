@@ -3,7 +3,7 @@ package lekavar.lma.drinkbeer.gui;
 import lekavar.lma.drinkbeer.registries.ContainerTypeRegistry;
 import lekavar.lma.drinkbeer.registries.ItemRegistry;
 import lekavar.lma.drinkbeer.registries.SoundEventRegistry;
-import lekavar.lma.drinkbeer.tileentity.BeerBarrelTileEntity;
+import lekavar.lma.drinkbeer.blockentities.BeerBarrelBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -27,7 +27,7 @@ public class BeerBarrelContainer extends AbstractContainerMenu {
     private final Container brewingSpace;
     private final ContainerData syncData;
 
-    public BeerBarrelContainer(int id, Container brewingSpace, ContainerData syncData, Inventory playerInventory, BeerBarrelTileEntity beerBarrelTileEntity) {
+    public BeerBarrelContainer(int id, Container brewingSpace, ContainerData syncData, Inventory playerInventory, BeerBarrelBlockEntity beerBarrelBlockEntity) {
         super(ContainerTypeRegistry.beerBarrelContainer.get(), id);
         this.brewingSpace = brewingSpace;
         this.syncData = syncData;
@@ -43,7 +43,7 @@ public class BeerBarrelContainer extends AbstractContainerMenu {
         // Empty Cup
         addSlot(new CupSlot(brewingSpace, 4, 73, 50));
         // Output
-        addSlot(new OutputSlot(brewingSpace, 5, 128, 34, syncData, beerBarrelTileEntity));
+        addSlot(new OutputSlot(brewingSpace, 5, 128, 34, syncData, beerBarrelBlockEntity));
 
         //Tracking Data
         addDataSlots(syncData);
@@ -54,7 +54,7 @@ public class BeerBarrelContainer extends AbstractContainerMenu {
     }
 
     public BeerBarrelContainer(int id, Inventory playerInventory, BlockPos pos) {
-        this(id, ((BeerBarrelTileEntity) Minecraft.getInstance().level.getBlockEntity(pos)), ((BeerBarrelTileEntity) Minecraft.getInstance().level.getBlockEntity(pos)).syncData, playerInventory, ((BeerBarrelTileEntity) Minecraft.getInstance().level.getBlockEntity(pos)));
+        this(id, ((BeerBarrelBlockEntity) Minecraft.getInstance().level.getBlockEntity(pos)), ((BeerBarrelBlockEntity) Minecraft.getInstance().level.getBlockEntity(pos)).syncData, playerInventory, ((BeerBarrelBlockEntity) Minecraft.getInstance().level.getBlockEntity(pos)));
     }
 
     private int addSlotRange(IItemHandler handler, int index, int x, int y, int amount, int dx) {
@@ -185,12 +185,12 @@ public class BeerBarrelContainer extends AbstractContainerMenu {
 
     static class OutputSlot extends Slot {
         private final ContainerData syncData;
-        private final BeerBarrelTileEntity beerBarrelTileEntity;
+        private final BeerBarrelBlockEntity beerBarrelBlockEntity;
 
-        public OutputSlot(Container p_i1824_1_, int p_i1824_2_, int p_i1824_3_, int p_i1824_4_, ContainerData syncData, BeerBarrelTileEntity beerBarrelTileEntity) {
+        public OutputSlot(Container p_i1824_1_, int p_i1824_2_, int p_i1824_3_, int p_i1824_4_, ContainerData syncData, BeerBarrelBlockEntity beerBarrelBlockEntity) {
             super(p_i1824_1_, p_i1824_2_, p_i1824_3_, p_i1824_4_);
             this.syncData = syncData;
-            this.beerBarrelTileEntity = beerBarrelTileEntity;
+            this.beerBarrelBlockEntity = beerBarrelBlockEntity;
         }
 
         // After player picking up product, play pour sound effect
@@ -202,7 +202,7 @@ public class BeerBarrelContainer extends AbstractContainerMenu {
                 //p_190901_1_.level.playSound(p_190901_1_, p_190901_1_.blockPosition(), SoundEventRegistry.POURING_CHRISTMAS_VER.get(), SoundCategory.BLOCKS, 1f, 1f);
 
             } else {*/
-            p_190901_1_.level.playSound((Player) null, beerBarrelTileEntity.getBlockPos(), SoundEventRegistry.POURING.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+            p_190901_1_.level.playSound((Player) null, beerBarrelBlockEntity.getBlockPos(), SoundEventRegistry.POURING.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
             //p_190901_1_.level.playSound(p_190901_1_, p_190901_1_.blockPosition(), SoundEventRegistry.POURING.get(), SoundCategory.BLOCKS, 1f, 1f);
             //}
         }

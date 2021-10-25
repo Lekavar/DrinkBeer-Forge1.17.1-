@@ -1,6 +1,6 @@
 package lekavar.lma.drinkbeer.blocks;
 
-import lekavar.lma.drinkbeer.tileentity.BeerBarrelTileEntity;
+import lekavar.lma.drinkbeer.blockentities.BeerBarrelBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -61,9 +61,9 @@ public class BeerBarrelBlock extends Block implements EntityBlock {
         if (!world.isClientSide) {
             world.playSound(null, pos, SoundEvents.BARREL_OPEN, SoundSource.BLOCKS, 1f, 1f);
 
-            BeerBarrelTileEntity beerBarrelTileEntity = (BeerBarrelTileEntity) world.getBlockEntity(pos);
-            NetworkHooks.openGui((ServerPlayer) player, beerBarrelTileEntity, (FriendlyByteBuf packerBuffer) -> {
-                packerBuffer.writeBlockPos(beerBarrelTileEntity.getBlockPos());
+            BeerBarrelBlockEntity beerBarrelBlockEntity = (BeerBarrelBlockEntity) world.getBlockEntity(pos);
+            NetworkHooks.openGui((ServerPlayer) player, beerBarrelBlockEntity, (FriendlyByteBuf packerBuffer) -> {
+                packerBuffer.writeBlockPos(beerBarrelBlockEntity.getBlockPos());
             });
         }
         return InteractionResult.sidedSuccess(world.isClientSide);
@@ -73,7 +73,7 @@ public class BeerBarrelBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new BeerBarrelTileEntity(blockPos, blockState);
+        return new BeerBarrelBlockEntity(blockPos, blockState);
     }
 
     @Nullable
@@ -83,8 +83,8 @@ public class BeerBarrelBlock extends Block implements EntityBlock {
             return null;
         } else {
             return (theLevel, pos, state, tile) -> {
-                if (tile instanceof BeerBarrelTileEntity beerBarrelTileEntity) {
-                    beerBarrelTileEntity.tickServer();
+                if (tile instanceof BeerBarrelBlockEntity beerBarrelBlockEntity) {
+                    beerBarrelBlockEntity.tickServer();
                 }
             };
         }
