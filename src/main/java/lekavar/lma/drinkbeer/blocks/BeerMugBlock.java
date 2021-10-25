@@ -1,31 +1,33 @@
 package lekavar.lma.drinkbeer.blocks;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.items.ItemHandlerHelper;
 
-import java.util.function.Function;
+import javax.annotation.Nullable;
 
 public class BeerMugBlock extends Block {
     public static final IntegerProperty AMOUNT = IntegerProperty.create("amount", 1, 3);
@@ -35,19 +37,17 @@ public class BeerMugBlock extends Block {
             Block.box(0, 0, 0, 16, 16, 16),
             Block.box(4, 0, 4, 12, 6, 12),
             Block.box(2, 0, 2, 14, 6, 14),
-            Block.box(1, 0, 1, 15, 6, 15)};
+            Block.box(1, 0, 1, 15, 6, 15)
+    };
 
     public BeerMugBlock() {
-        super(Properties.of(Material.WOOD).strength(1.0f));
+        super(Properties.of(Material.WOOD).strength(1.0f).noOcclusion());
+        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
-        return SHAPE_BY_AMOUNT[p_60555_.getValue(this.getAmountProperty())];
-    }
-
-    public IntegerProperty getAmountProperty() {
-        return this.AMOUNT;
+    public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
+        return SHAPE_BY_AMOUNT[p_220053_1_.getValue(AMOUNT)];
     }
 
     @Override
@@ -55,41 +55,86 @@ public class BeerMugBlock extends Block {
         builder.add(AMOUNT, FACING);
     }
 
-    public BlockState getStateForPlacement(BlockPlaceContext p_48689_) {
-        return this.defaultBlockState().setValue(FACING, p_48689_.getHorizontalDirection());
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());
     }
 
     @Override
-    public InteractionResult use(BlockState p_60503_, Level p_60504_, BlockPos p_60505_, Player p_60506_, InteractionHand p_60507_, BlockHitResult p_60508_) {
-        ItemStack itemStack = p_60506_.getItemInHand(p_60507_);
-        if (itemStack.getItem().asItem() == p_60503_.getBlock().asItem()) {
-            int amount = p_60503_.getValue(AMOUNT);
-            int mugInHandCount = p_60506_.getItemInHand(p_60507_).getCount();
-            boolean isCreative = p_60506_.isCreative();
-            switch (amount) {
-                case 1:
-                    p_60504_.setBlock(p_60505_, p_60503_.getBlock().defaultBlockState().setValue(AMOUNT, 2).setValue(FACING, p_60503_.getValue(FACING)), 0);
-                    if (!isCreative) {
-                        p_60506_.getItemInHand(p_60507_).setCount(mugInHandCount - 1);
-                    }
-                    if (!p_60504_.isClientSide()) {
-                        p_60504_.playSound(null, p_60505_, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1f, 1f);
-                    }
-                    return InteractionResult.SUCCESS;
-                case 2:
-                    p_60504_.setBlock(p_60505_, p_60503_.getBlock().defaultBlockState().setValue(AMOUNT, 3).setValue(FACING, p_60503_.getValue(FACING)), 0);
-                    if (!isCreative) {
-                        p_60506_.getItemInHand(p_60507_).setCount(mugInHandCount - 1);
-                    }
-                    if (!p_60504_.isClientSide()) {
-                        p_60504_.playSound(null, p_60505_, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1f, 1f);
-                    }
-                    return InteractionResult.SUCCESS;
-                default:
-                    return InteractionResult.FAIL;
+    public BlockState updateShape(BlockState p_196271_1_, Direction p_196271_2_, BlockState p_196271_3_, LevelAccessor p_196271_4_, BlockPos p_196271_5_, BlockPos p_196271_6_) {
+        return p_196271_2_ == Direction.DOWN && !p_196271_1_.canSurvive(p_196271_4_, p_196271_5_) ? Blocks.AIR.defaultBlockState() : super.updateShape(p_196271_1_, p_196271_2_, p_196271_3_, p_196271_4_, p_196271_5_, p_196271_6_);
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack itemStack = player.getItemInHand(hand);
+        // Placing Bear
+        if (itemStack.getItem().asItem() == state.getBlock().asItem()) {
+            if (world.isClientSide()) {
+                return InteractionResult.SUCCESS;
+            } else {
+                int amount = state.getValue(AMOUNT);
+                int mugInHandCount = player.getItemInHand(hand).getCount();
+                boolean isCreative = player.isCreative();
+                switch (amount) {
+                    case 1:
+                        world.setBlock(pos, state.getBlock().defaultBlockState().setValue(AMOUNT, 2).setValue(FACING, state.getValue(FACING)), 0);
+                        if (!isCreative) {
+                            player.getItemInHand(hand).setCount(mugInHandCount - 1);
+                        }
+                        if (!world.isClientSide()) {
+                            world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1f, 1f);
+                        }
+                        return InteractionResult.CONSUME;
+                    case 2:
+                        world.setBlock(pos, state.getBlock().defaultBlockState().setValue(AMOUNT, 3).setValue(FACING, state.getValue(FACING)), 0);
+                        if (!isCreative) {
+                            player.getItemInHand(hand).setCount(mugInHandCount - 1);
+                        }
+                        if (!world.isClientSide()) {
+                            world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1f, 1f);
+                        }
+                        return InteractionResult.CONSUME;
+                }
             }
-        } else {
-            return InteractionResult.FAIL;
         }
+        // Retrieve Beer
+        else if (itemStack.isEmpty()) {
+            if (world.isClientSide()) {
+                return InteractionResult.SUCCESS;
+            } else {
+                ItemStack takeBackBeer = state.getBlock().asItem().getDefaultInstance();
+                ItemHandlerHelper.giveItemToPlayer(player, takeBackBeer);
+                int amount = state.getValue(AMOUNT);
+                switch (amount) {
+                    case 3:
+                    case 2:
+                        world.setBlock(pos, state.getBlock().defaultBlockState().setValue(AMOUNT, amount - 1).setValue(FACING, state.getValue(FACING)), 0);
+                        if (!world.isClientSide()) {
+                            world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.AMBIENT, 0.5f, 0.5f);
+                        }
+                        return InteractionResult.CONSUME;
+                    case 1:
+                        world.setBlock(pos, Blocks.AIR.defaultBlockState(), 0);
+                        if (!world.isClientSide()) {
+                            world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.AMBIENT, 0.5f, 0.5f);
+                        }
+                        return InteractionResult.CONSUME;
+                }
+            }
+        }
+        return InteractionResult.PASS;
+    }
+
+    @Override
+    public PushReaction getPistonPushReaction(BlockState p_149656_1_) {
+        return PushReaction.DESTROY;
+    }
+
+    @Override
+    public boolean canSurvive(BlockState p_196260_1_, LevelReader p_196260_2_, BlockPos p_196260_3_) {
+        if (p_196260_2_.getBlockState(p_196260_3_.below()).getBlock() instanceof BeerMugBlock) return false;
+        return Block.canSupportCenter(p_196260_2_, p_196260_3_.below(), Direction.UP);
     }
 }

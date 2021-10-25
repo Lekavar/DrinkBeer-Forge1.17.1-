@@ -6,7 +6,47 @@
   },
   "pouring": {
     "sounds": [
-	  "drinkbeer:pouring"
+      "drinkbeer:pouring"
+    ]
+  },
+  "pouring_christmas":{
+    "sounds": [
+      "drinkbeer:pouring_christmas"
+    ]
+  },
+  "iron_call_bell_tinkling":{
+    "sounds": [
+      "drinkbeer:iron_call_bell_tinkling"
+    ]
+  },
+  "golden_call_bell_tinkling":{
+    "sounds": [
+      "drinkbeer:golden_call_bell_tinkling"
+    ]
+  },
+  "night_howl_drinking_effect_1":{
+    "sounds": [
+      "drinkbeer:night_howl_drinking_effect_1"
+    ]
+  },
+  "night_howl_drinking_effect_2":{
+    "sounds": [
+      "drinkbeer:night_howl_drinking_effect_2"
+    ]
+  },
+  "night_howl_drinking_effect_3":{
+    "sounds": [
+      "drinkbeer:night_howl_drinking_effect_3"
+    ]
+  },
+  "night_howl_drinking_effect_4":{
+    "sounds": [
+      "drinkbeer:night_howl_drinking_effect_4"
+    ]
+  },
+  "unpacking_package":{
+    "sounds": [
+      "drinkbeer:unpacking_package"
     ]
   }
 }
