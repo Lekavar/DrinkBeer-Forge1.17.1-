@@ -37,6 +37,16 @@ public class BrewingRecipe implements Recipe<IBrewingInventory> {
         this.result = result;
     }
 
+    public NonNullList<Ingredient> getIngredient(){
+        NonNullList<Ingredient> result = NonNullList.create();
+        result.addAll(input);
+        return result;
+    }
+
+    public ItemStack geBeerCup(){
+        return cup.copy();
+    }
+
     @Override
     public boolean matches(IBrewingInventory p_77569_1_, Level p_77569_2_) {
         List<Ingredient> testTarget = Lists.newArrayList(input);
