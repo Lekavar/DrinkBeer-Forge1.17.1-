@@ -79,22 +79,18 @@ public class BeerMugBlock extends Block {
                 boolean isCreative = player.isCreative();
                 switch (amount) {
                     case 1:
-                        world.setBlock(pos, state.getBlock().defaultBlockState().setValue(AMOUNT, 2).setValue(FACING, state.getValue(FACING)), 0);
+                        world.setBlockAndUpdate(pos, state.getBlock().defaultBlockState().setValue(AMOUNT, 2).setValue(FACING, state.getValue(FACING)));
                         if (!isCreative) {
                             player.getItemInHand(hand).setCount(mugInHandCount - 1);
                         }
-                        if (!world.isClientSide()) {
-                            world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1f, 1f);
-                        }
+                        world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1f, 1f);
                         return InteractionResult.CONSUME;
                     case 2:
-                        world.setBlock(pos, state.getBlock().defaultBlockState().setValue(AMOUNT, 3).setValue(FACING, state.getValue(FACING)), 0);
+                        world.setBlockAndUpdate(pos, state.getBlock().defaultBlockState().setValue(AMOUNT, 3).setValue(FACING, state.getValue(FACING)));
                         if (!isCreative) {
                             player.getItemInHand(hand).setCount(mugInHandCount - 1);
                         }
-                        if (!world.isClientSide()) {
-                            world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1f, 1f);
-                        }
+                        world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1f, 1f);
                         return InteractionResult.CONSUME;
                 }
             }
@@ -110,16 +106,12 @@ public class BeerMugBlock extends Block {
                 switch (amount) {
                     case 3:
                     case 2:
-                        world.setBlock(pos, state.getBlock().defaultBlockState().setValue(AMOUNT, amount - 1).setValue(FACING, state.getValue(FACING)), 0);
-                        if (!world.isClientSide()) {
-                            world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.AMBIENT, 0.5f, 0.5f);
-                        }
+                        world.setBlockAndUpdate(pos, state.getBlock().defaultBlockState().setValue(AMOUNT, amount - 1).setValue(FACING, state.getValue(FACING)));
+                        world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.AMBIENT, 0.5f, 0.5f);
                         return InteractionResult.CONSUME;
                     case 1:
-                        world.setBlock(pos, Blocks.AIR.defaultBlockState(), 0);
-                        if (!world.isClientSide()) {
-                            world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.AMBIENT, 0.5f, 0.5f);
-                        }
+                        world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                        world.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.AMBIENT, 0.5f, 0.5f);
                         return InteractionResult.CONSUME;
                 }
             }
