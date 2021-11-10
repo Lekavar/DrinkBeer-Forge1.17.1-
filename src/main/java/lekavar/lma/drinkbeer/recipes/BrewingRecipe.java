@@ -20,8 +20,6 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import javax.annotation.Nullable;
 import java.util.List;
 
-
-//TODO 先重写完酒桶
 public class BrewingRecipe implements Recipe<IBrewingInventory> {
     private final ResourceLocation id;
     private final NonNullList<Ingredient> input;

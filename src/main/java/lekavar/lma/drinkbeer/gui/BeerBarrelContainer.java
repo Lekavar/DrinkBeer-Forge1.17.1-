@@ -92,7 +92,7 @@ public class BeerBarrelContainer extends AbstractContainerMenu {
             itemstack = itemstack1.copy();
 
             // Try quick-pickup output
-            if (p_82846_2_ == 2) {
+            if (p_82846_2_ == 41) {
                 if (!this.moveItemStackTo(itemstack1, 0, 36, false)) {
                     return ItemStack.EMPTY;
                 }
