@@ -37,13 +37,26 @@ public class BrewingRecipe implements Recipe<IBrewingInventory> {
         this.result = result;
     }
 
+    @Deprecated
     public NonNullList<Ingredient> getIngredient(){
         NonNullList<Ingredient> result = NonNullList.create();
         result.addAll(input);
         return result;
     }
 
+    @Override
+    public NonNullList<Ingredient> getIngredients(){
+        NonNullList<Ingredient> result = NonNullList.create();
+        result.addAll(input);
+        return result;
+    }
+
+    @Deprecated
     public ItemStack geBeerCup(){
+        return cup.copy();
+    }
+
+    public ItemStack getBeerCup(){
         return cup.copy();
     }
 

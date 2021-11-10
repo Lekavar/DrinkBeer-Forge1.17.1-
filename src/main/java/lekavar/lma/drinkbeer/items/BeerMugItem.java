@@ -96,9 +96,12 @@ public class BeerMugItem extends BlockItem {
         }
         // Return empty mug
         if (livingEntity instanceof Player && ((Player) livingEntity).isCreative()) {
-            return stack;
+            ItemStack temp = stack.copy();
+            livingEntity.eat(world,stack);
+            return temp;
         } else {
             if (stack.getCount() == 1) {
+                livingEntity.eat(world,stack);
                 return new ItemStack(ItemRegistry.EMPTY_BEER_MUG.get());
             } else {
                 ItemStack emptyMug = new ItemStack(ItemRegistry.EMPTY_BEER_MUG.get(), 1);
