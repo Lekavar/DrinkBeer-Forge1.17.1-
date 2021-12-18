@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MilkBucketItem;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
@@ -223,11 +224,12 @@ public class BeerBarrelBlockEntity extends BlockEntity implements MenuProvider, 
         handleUpdateTag(pkt.getTag());
     }
 
-    @Nullable
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(worldPosition, 1, getUpdateTag());
-    }
+    //TODO: See what is supose to do this and change 1 for a blockEntity correct type.
+//    @Nullable
+//    @Override
+//    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+//        return new ClientboundBlockEntityDataPacket(worldPosition, 1, getUpdateTag());
+//    }
 
     @Override
     public CompoundTag getUpdateTag() {
