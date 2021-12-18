@@ -4,8 +4,8 @@ This project is continued from DrinkBeer(Forge) 1.17.1 (Lekavar)
 
 
 ## Especial thanks
-Lekavar
-PixVoxel
+Lekavar<br>
+PixVoxel<br>
 MarbleGateKeeper
 
 
